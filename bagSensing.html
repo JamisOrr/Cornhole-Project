@@ -2,7 +2,7 @@
 <html>
 
 <body>
-    <input type="button" id="button" onclick="hehe()" value="connect">
+    <input type="button" id="button" onclick="serial()" value="connect">
     <p id="scoreDisplayObject"></p>
     <p id="arrayDisplayObject"></p>
     <script>
@@ -43,7 +43,7 @@
         var row = 0;
         var white = 0;
         var black = 0;
-        async function hehe() {
+        async function serial() {
             const port = await navigator.serial.requestPort();
             await port.open({ baudRate: 9600 });
             while (port.readable) {
@@ -83,17 +83,27 @@
                                 }
                                 //console.log(gaymis);
                                 document.getElementById("arrayDisplayObject").innerText = arrayDisplayString;
+                                var newSensedWhite = false;
+                                var missingSensedWhite = false;
+                                var newSensedBlack = false;
+                                var missingSensedBlack = false;
                                 for (var i = 0; i < 14; i++) {
                                     for (var j = 0; j < 7; j++) {
                                         if (dataArray[i][j] != prevDataArray[i][j]) {
-                                            if (dataArray[i][j] == 1) {
+                                            if (dataArray[i][j] == 1 && !newSensedWhite) {
                                                 white++;
-                                                i=14;
-                                                j=7;
-                                            } else if (dataArray[i][j] == 2) {
+                                                newSensedWhite = true;
+                                            } else if (dataArray[i][j] == 2 && !newSensedBlack) {
                                                 black++;
-                                                i=14;
-                                                j=7;
+                                                newSensedBlack = true;
+                                            } else if (dataArray[i][j] == 0){
+                                                if(prevDataArray[i][j] == 1 && !missingSensedWhite){
+                                                    white--;
+                                                    missingSensedWhite = true;
+                                                } else if (prevDataArray[i][j] == 2 && !missingSensedBlack){
+                                                    black--;
+                                                    missingSensedBlack = true;
+                                                }
                                             }
                                         }
                                     }
