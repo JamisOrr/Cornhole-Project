@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Game History</title>
+</head>
+
+<body>
+    <h1>Game History</h1>
+    <input type="button" id="home" value="Home" onclick="window.location.href='home.html'">
+    <input type="button" id="manage" value="History Management" onclick="window.location.href='historymanagement.html'">
+    <h3 id="historyDisplayObject"></h3>
+</body>
+<script>
+    var data = localStorage.gh;
+    if (data != "") {
+        const data = data.split("~");
+        var info = "";
+        for (let i = 0; i < data.length; ++i) {
+            var tempData = data[i];
+            const tempDataArray = tempData.split("|");
+            info += tempDataArray[0]+"'s Score: " + tempDataArray[1] +" "+tempDataArray[2] +"'s Score: " + tempDataArray[3] + " Date Played: " + tempDataArray[4] + "\n";
+        }
+        document.getElementById("historyDisplayObject").innerText = info;
+    }else{
+        document.getElementById("historyDisplayObject").innerText = "No Recorded Game History";
+    }
+</script>
+
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Start Game</title>
+    <style>
+        .r {
+            background-color: red;
+            font-size: 30px;
+        }
+
+        .rh {
+            color: red;
+        }
+
+        .b {
+            background-color: blue;
+            font-size: 30px;
+        }
+
+        .bh {
+            color: blue;
+        }
+
+        .num {
+            background-color: black;
+            color: lightgray;
+        }
+
+        .init {
+            color: black;
+            background-color: lightgray;
+        }
+
+        .start {
+            font-size: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Start Game</h1>
+    <div>
+        <h3>Which Color is Throwing First?</h3>
+        <input type="button" id="red" value="Red" onclick="red()" class="r">
+        <input type="button" id="blue" value="Blue" onclick="blue()" class="b">
+    </div>
+    <div>
+        <h3 class="rh">Red Player Name:</h3>
+        <input type="text" id="redname" value="">
+        <h3 class="bh">Blue Player Name:</h3>
+        <input type="text" id="bluename" value="">
+    </div>
+    <div>
+        <h3>What is the Game to?</h3>
+        <input type="button" id="eleven" value="11" onclick="eleven()" class="init">
+        <input type="button" id="twoone" value="21" onclick="twoone()" class="init">
+        <input type="button" id="cust" value="Custom" onclick="custom()" class="init">
+        <input type="text" id="custom" value="Custom Score">
+    </div>
+    <br>
+    <input type="button" id="start" value="Start Game" onclick="start()" class="start">
+</body>
+<script>
+    var first = "";
+    var rname = "";
+    var bname = "";
+    var score = "";
+    var custim = false;
+    function start() {
+        rname=document.getElementById("redname").value;
+        bname=document.getElementById("bluename").value;
+        var data=first+"|"+rname+"|"+bname+"|";
+        if(custim==false){
+            data+=score;
+        }else{
+            data+=document.getElementById("custom").value;
+        }
+        localStorage.gameInfo=data;
+        location.replace("./playinggame.html");
+    }
+    function red() {
+        first = "red";
+        document.getElementById("red").style.backgroundColor = "#00ff00";
+        document.getElementById("blue").style.backgroundColor = "#0000ff";
+    }
+    function blue() {
+        first = "blue";
+        document.getElementById("red").style.backgroundColor = "#ff0000";
+        document.getElementById("blue").style.backgroundColor = "#00ff00";
+    }
+    function eleven() {
+        score = "11";
+        custim = false;
+        document.getElementById("eleven").style.backgroundColor = "#000000";
+        document.getElementById("eleven").style.color = "#d3d3d3";
+        document.getElementById("twoone").style.backgroundColor = "#d3d3d3";
+        document.getElementById("twoone").style.color = "#000000";
+        document.getElementById("cust").style.backgroundColor = "#d3d3d3";
+        document.getElementById("cust").style.color = "#000000";
+    }
+    function twoone() {
+        score = "21";
+        custim = false;
+        document.getElementById("eleven").style.backgroundColor = "#d3d3d3";
+        document.getElementById("eleven").style.color = "#000000";
+        document.getElementById("twoone").style.backgroundColor = "#000000";
+        document.getElementById("twoone").style.color = "#d3d3d3";
+        document.getElementById("cust").style.backgroundColor = "#d3d3d3";
+        document.getElementById("cust").style.color = "#000000";
+    }
+    function custom() {
+        custim = true;
+        document.getElementById("eleven").style.backgroundColor = "#d3d3d3";
+        document.getElementById("eleven").style.color = "#000000";
+        document.getElementById("twoone").style.backgroundColor = "#d3d3d3";
+        document.getElementById("twoone").style.color = "#000000";
+        document.getElementById("cust").style.backgroundColor = "#000000";
+        document.getElementById("cust").style.color = "#d3d3d3";
+    }
+</script>
+
+</html>

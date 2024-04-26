@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>History Management</title>
+</head>
+
+<body>
+    <h1>History Management</h1>
+    
+    <input type="button" id="back" value="Back" onclick="window.location.href='history.html'">
+    <input type="button" id="reset" value="Clear History" onclick="reset()">
+</body>
+<script>
+    function reset() {
+        localStorage.gh = "";
+    }
+</script>
+
+</html>

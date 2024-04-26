@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Playing Game</title>
+    <style>
+        .rh {
+            color: red;
+            float: left;
+            clear: left;
+        }
+
+        .bh {
+            color: blue;
+            float: left;
+        }
+
+        .bleck {
+            color: black;
+            float: left;
+            padding-left: 100px;
+            padding-right: 100px;
+
+        }
+
+        .bottomPadding {
+            float: left;
+            clear: left;
+        }
+
+        .f {
+            float: left;
+            padding-left: 5px;
+        }
+
+        .hee {
+            padding-bottom: 25px;
+        }
+
+        .him {
+            clear: left;
+        }
+
+        .r {
+            color: red;
+            float: left;
+            clear: left;
+        }
+
+        .b {
+            float: left;
+            color: blue;
+            padding-left: 150px;
+        }
+
+        .ra {
+            color: white;
+            background-color: red;
+            float: left;
+            clear: left;
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
+        .ba {
+            float: left;
+            color: white;
+            background-color: blue;
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Live Score</h1>
+    <h2 class="him" id="firstup"></h2>
+    <img src="red.jpg" alt="Red Circle" width="150" height="150">
+    <img src="blue.jpg" alt="Blue X" width="100" height="100" class="hee">
+    <br>
+    <input class="ra" type="button" id="rpt" value="+1" onclick="rp()">
+    <input class="ba" type="button" id="bpt" value="+1" onclick="bp()">
+    <h2 id="rscore" class="rh">0</h2>
+    <h2 class="bleck">-</h2>
+    <h2 id="bscore" class="bh">0</h2>
+    <h2 class="r" id="rn"></h2>
+    <h2 class="b" id="bn"></h2>
+    <h2 class="bottomPadding">Round: </h2>
+    <h2 class="f" id="round"> 0</h2>
+</body>
+<script>
+    var data = localStorage.gameInfo;
+    const info = data.split("|");
+    document.getElementById("rn").innerText = info[1];
+    document.getElementById("bn").innerText = info[2];
+    var score = info[3];
+    if (info[0] == "red") {
+        document.getElementById("firstup").innerText = "Red is First Up";
+        document.getElementById("firstup").style.color = "#ff0000";
+    } else {
+        document.getElementById("firstup").innerText = "Blue is First Up";
+        document.getElementById("firstup").style.color = "#0000ff";
+    }
+    var rscore = 0;
+    var bscore = 0;
+    const date = new Date().toDateString();
+
+    function rp() {
+        rscore++;
+        document.getElementById("rscore").innerText = rscore;
+        checkscore();
+    }
+    function bp() {
+        bscore++;
+        document.getElementById("bscore").innerText = bscore;
+        checkscore();
+    }
+    function checkscore() {
+        if (rscore == score || bscore == score) {
+            var f = info[1] + "|" + rscore + "|" + info[2] + "|" + bscore + "|" + date;
+            if (localStorage.gh == "") {
+                localStorage.gh = f;
+            } else {
+                localStorage.gh = "~" + f;
+            }
+            if (rscore == score) {
+                localStorage.go = "red";
+            } else {
+                localStorage.go = "blue";
+            }
+            location.replace("./gameover.html");
+        }
+    }
+</script>
+
+</html>
