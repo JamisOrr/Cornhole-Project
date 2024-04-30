@@ -87,6 +87,7 @@
     <h2 class="b" id="bn"></h2>
     <h2 class="bottomPadding">Round: </h2>
     <h2 class="f" id="round"> 0</h2>
+    <input type="button" value="press" onclick="init()">
 </body>
 <script>
     var data = localStorage.gameInfo;
@@ -101,23 +102,21 @@
         document.getElementById("firstup").innerText = "Black is First Up";
         //  document.getElementById("firstup").style.color = "#0000ff";
     }
-    var rscore = 0;
-    var bscore = 0;
     const date = new Date().toDateString();
 
     function rp() {
-        rscore++;
-        document.getElementById("rscore").innerText = rscore;
+        white++;
+        document.getElementById("rscore").innerText = white;
         checkscore();
     }
     function bp() {
-        bscore++;
-        document.getElementById("bscore").innerText = bscore;
+        black++;
+        document.getElementById("bscore").innerText = black;
         checkscore();
     }
     function checkscore() {
-        if (rscore == score || bscore == score) {
-            var f = info[1] + "|" + rscore + "|" + info[2] + "|" + bscore + "|" + date;
+        if (white == score || black == score) {
+            var f = info[1] + "|" + white + "|" + info[2] + "|" + black + "|" + date;
             if (localStorage.gh == "") {
                 localStorage.gh = f;
             } else {
@@ -131,7 +130,124 @@
             location.replace("./gameover.html");
         }
     }
-    
+    var dataArray = new Array(
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0]
+    );
+    var prevDataArray = new Array(
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0]
+    );
+    var s = false;
+    var col = 0;
+    var row = 0;
+    var white = 0;
+    var black = 0;
+    async function init() {
+        const port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 9600 });
+        while (port.readable) {
+            const textDecoder = new TextDecoderStream();
+            const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+            const reader = textDecoder.readable.getReader();
+            while (true) {
+                const { value, done } = await reader.read();
+                if (value) {
+                    const str = value;
+                    for (const char of str) {
+                        if (char == "s") {
+                            if (s) {
+                                row = 0;
+                                col = 0;
+                                s = false;
+                            } else {
+                                s = true;
+                            }
+                        }
+                        if (s) {
+                            if (char != 's' && char != 't') {
+                                dataArray[row][col] = char;
+                                col++;
+                                if (col == 7) {
+                                    col = 0
+                                    row++;
+                                }
+                            }
+                        } else {
+                            var arrayDisplayString = "";
+                            for (var q = 0; q < 14; q++) {
+                                for (var w = 0; w < 7; w++) {
+                                    arrayDisplayString += dataArray[q][w] + " ";
+                                }
+                                arrayDisplayString += "\n"
+                            }
+                            var newSensedWhite = false;
+                            var missingSensedWhite = false;
+                            var newSensedBlack = false;
+                            var missingSensedBlack = false;
+                            for (var i = 0; i < 14; i++) {
+                                for (var j = 0; j < 7; j++) {
+                                    if (dataArray[i][j] != prevDataArray[i][j]) {
+                                        if (dataArray[i][j] == 1 && !newSensedWhite) {
+                                            white++;
+                                            newSensedWhite = true;
+                                        } else if (dataArray[i][j] == 2 && !newSensedBlack) {
+                                            black++;
+                                            newSensedBlack = true;
+                                        } else if (dataArray[i][j] == 0) {
+                                            if (prevDataArray[i][j] == 1 && !missingSensedWhite) {
+                                                white--;
+                                                missingSensedWhite = true;
+                                            } else if (prevDataArray[i][j] == 2 && !missingSensedBlack) {
+                                                black--;
+                                                missingSensedBlack = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            document.getElementById("rscore").innerText = white;
+                            document.getElementById("bscore").innerText = black;
+                            //document.getElementById("scoreDisplayObject").innerText = (white + " " + black);
+                            //console.log(white + " " + black);
+                            for (var i = 0; i < 14; i++) {
+                                for (var j = 0; j < 7; j++) {
+                                    prevDataArray[i][j] = dataArray[i][j];
+                                }
+                            }
+                        }
+                    };
+                }
+
+            }
+        }
+        console.log("not readable");
+        await port.close();
+    }
 </script>
 
 </html>
