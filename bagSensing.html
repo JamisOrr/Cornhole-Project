@@ -7,36 +7,36 @@
     <p id="arrayDisplayObject"></p>
     <script>
         var dataArray = new Array(
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1]
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
         );
         var prevDataArray = new Array(
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1],
-            [1, 5, -1, 1, 1, 1, 1]
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
         );
         var s = false;
         var col = 0;
@@ -96,11 +96,11 @@
                                             } else if (dataArray[i][j] == 2 && !newSensedBlack) {
                                                 black++;
                                                 newSensedBlack = true;
-                                            } else if (dataArray[i][j] == 0){
-                                                if(prevDataArray[i][j] == 1 && !missingSensedWhite){
+                                            } else if (dataArray[i][j] == 0) {
+                                                if (prevDataArray[i][j] == 1 && !missingSensedWhite) {
                                                     white--;
                                                     missingSensedWhite = true;
-                                                } else if (prevDataArray[i][j] == 2 && !missingSensedBlack){
+                                                } else if (prevDataArray[i][j] == 2 && !missingSensedBlack) {
                                                     black--;
                                                     missingSensedBlack = true;
                                                 }
@@ -108,7 +108,7 @@
                                         }
                                     }
                                 }
-                                document.getElementById("scoreDisplayObject").innerText = (white+" "+black);
+                                document.getElementById("scoreDisplayObject").innerText = (white + " " + black);
                                 //console.log(white + " " + black);
                                 for (var i = 0; i < 14; i++) {
                                     for (var j = 0; j < 7; j++) {
