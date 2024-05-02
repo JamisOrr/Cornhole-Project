@@ -73,6 +73,7 @@
 </head>
 
 <body>
+    <input type="button" id="connect" value="CONNECT BOARD" onclick="init()">
     <h1>Live Score</h1>
     <h2 class="him" id="firstup"></h2>
     <img src="red.jpg" alt="White Circle" width="150" height="150">
@@ -80,14 +81,22 @@
     <br>
     <input class="ra" type="button" id="rpt" value="+1" onclick="rp()">
     <input class="ba" type="button" id="bpt" value="+1" onclick="bp()">
+    <h2 class="rh">Overall Score: </h2>
+    <h2 id="whiteOver" class="rh">0</h2>
+    <h2 class="bleck">-</h2>
+    <h2 id="blackOver" class="bh">0</h2>
+
+    <h2 class="rh">Round Score: </h2>
     <h2 id="rscore" class="rh">0</h2>
     <h2 class="bleck">-</h2>
     <h2 id="bscore" class="bh">0</h2>
+
     <h2 class="r" id="rn"></h2>
     <h2 class="b" id="bn"></h2>
     <h2 class="bottomPadding">Round: </h2>
-    <h2 class="f" id="round"> 0</h2>
-    <input type="button" value="press" onclick="init()">
+    <h2 class="f" id="round">0</h2>
+    <input type="button" value="Start Round" onclick="startRound()">
+    <input type="button" value="End Round" onclick="endRound()">
 </body>
 <script>
     var data = localStorage.gameInfo;
@@ -95,6 +104,7 @@
     document.getElementById("rn").innerText = info[1];
     document.getElementById("bn").innerText = info[2];
     var score = info[3];
+    var round = 0;
     if (info[0] == "white") {
         document.getElementById("firstup").innerText = "White is First Up";
         //  document.getElementById("firstup").style.color = "#ff0000";
@@ -103,7 +113,33 @@
         //  document.getElementById("firstup").style.color = "#0000ff";
     }
     const date = new Date().toDateString();
-
+    var whiteOverall = 0;
+    var blackOverall = 0;
+    var inRound = false;
+    function startRound() {
+        round++;
+        document.getElementById("round").innerText = round;
+        white = 0;
+        black = 0;
+        document.getElementById("rscore").innerText = white;
+        document.getElementById("bscore").innerText = black;
+        inRound = true;
+    }
+    function endRound() {
+        inRound = false;
+        document.getElementById("firstup").innerText = "";
+        if (white > black) {
+            whiteOverall += white - black;
+        } else if (black > white) {
+            blackOverall += black - white;
+        }
+        white = 0;
+        black = 0;
+        document.getElementById("whiteOver").innerText = whiteOverall;
+        document.getElementById("blackOver").innerText = blackOverall;
+        document.getElementById("rscore").innerText = white;
+        document.getElementById("bscore").innerText = black;
+    }
     function rp() {
         white++;
         document.getElementById("rscore").innerText = white;
@@ -168,6 +204,7 @@
     var white = 0;
     var black = 0;
     async function init() {
+        document.getElementById("connect").style.visibility = 'hidden';
         const port = await navigator.serial.requestPort();
         await port.open({ baudRate: 9600 });
         while (port.readable) {
@@ -175,74 +212,75 @@
             const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
             const reader = textDecoder.readable.getReader();
             while (true) {
-                const { value, done } = await reader.read();
-                if (value) {
-                    const str = value;
-                    for (const char of str) {
-                        if (char == "s") {
+                    const { value, done } = await reader.read();
+                    if (inRound) {
+                    if (value) {
+                        const str = value;
+                        for (const char of str) {
+                            if (char == "s") {
+                                if (s) {
+                                    row = 0;
+                                    col = 0;
+                                    s = false;
+                                } else {
+                                    s = true;
+                                }
+                            }
                             if (s) {
-                                row = 0;
-                                col = 0;
-                                s = false;
+                                if (char != 's' && char != 't') {
+                                    dataArray[row][col] = char;
+                                    col++;
+                                    if (col == 7) {
+                                        col = 0
+                                        row++;
+                                    }
+                                }
                             } else {
-                                s = true;
-                            }
-                        }
-                        if (s) {
-                            if (char != 's' && char != 't') {
-                                dataArray[row][col] = char;
-                                col++;
-                                if (col == 7) {
-                                    col = 0
-                                    row++;
+                                var arrayDisplayString = "";
+                                for (var q = 0; q < 14; q++) {
+                                    for (var w = 0; w < 7; w++) {
+                                        arrayDisplayString += dataArray[q][w] + " ";
+                                    }
+                                    arrayDisplayString += "\n"
                                 }
-                            }
-                        } else {
-                            var arrayDisplayString = "";
-                            for (var q = 0; q < 14; q++) {
-                                for (var w = 0; w < 7; w++) {
-                                    arrayDisplayString += dataArray[q][w] + " ";
-                                }
-                                arrayDisplayString += "\n"
-                            }
-                            var newSensedWhite = false;
-                            var missingSensedWhite = false;
-                            var newSensedBlack = false;
-                            var missingSensedBlack = false;
-                            for (var i = 0; i < 14; i++) {
-                                for (var j = 0; j < 7; j++) {
-                                    if (dataArray[i][j] != prevDataArray[i][j]) {
-                                        if (dataArray[i][j] == 1 && !newSensedWhite) {
-                                            white++;
-                                            newSensedWhite = true;
-                                        } else if (dataArray[i][j] == 2 && !newSensedBlack) {
-                                            black++;
-                                            newSensedBlack = true;
-                                        } else if (dataArray[i][j] == 0) {
-                                            if (prevDataArray[i][j] == 1 && !missingSensedWhite) {
-                                                white--;
-                                                missingSensedWhite = true;
-                                            } else if (prevDataArray[i][j] == 2 && !missingSensedBlack) {
-                                                black--;
-                                                missingSensedBlack = true;
+                                var newSensedWhite = false;
+                                var missingSensedWhite = false;
+                                var newSensedBlack = false;
+                                var missingSensedBlack = false;
+                                for (var i = 0; i < 14; i++) {
+                                    for (var j = 0; j < 7; j++) {
+                                        if (dataArray[i][j] != prevDataArray[i][j]) {
+                                            if (dataArray[i][j] == 1 && !newSensedWhite) {
+                                                white++;
+                                                newSensedWhite = true;
+                                            } else if (dataArray[i][j] == 2 && !newSensedBlack) {
+                                                black++;
+                                                newSensedBlack = true;
+                                            } else if (dataArray[i][j] == 0) {
+                                                if (prevDataArray[i][j] == 1 && !missingSensedWhite) {
+                                                    white--;
+                                                    missingSensedWhite = true;
+                                                } else if (prevDataArray[i][j] == 2 && !missingSensedBlack) {
+                                                    black--;
+                                                    missingSensedBlack = true;
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                            document.getElementById("rscore").innerText = white;
-                            document.getElementById("bscore").innerText = black;
-                            //document.getElementById("scoreDisplayObject").innerText = (white + " " + black);
-                            //console.log(white + " " + black);
-                            for (var i = 0; i < 14; i++) {
-                                for (var j = 0; j < 7; j++) {
-                                    prevDataArray[i][j] = dataArray[i][j];
+                                document.getElementById("rscore").innerText = white;
+                                document.getElementById("bscore").innerText = black;
+                                //console.log(white + " " + black);
+                                for (var i = 0; i < 14; i++) {
+                                    for (var j = 0; j < 7; j++) {
+                                        prevDataArray[i][j] = dataArray[i][j];
+                                    }
                                 }
                             }
-                        }
-                    };
-                }
+                        };
+                    }
 
+                }
             }
         }
         console.log("not readable");
