@@ -69,11 +69,19 @@
             padding-left: 50px;
             padding-right: 50px;
         }
+        .kinect {
+            background-color: red;
+            font-size: 50px;
+            padding-left: 50px;
+            padding-right: 50px;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
     </style>
 </head>
 
 <body>
-    <input type="button" id="connect" value="CONNECT BOARD" onclick="init()">
+    <input type="button" class="kinect" id="connect" value="CONNECT BOARD" onclick="init()">
     <h1>Live Score</h1>
     <h2 class="him" id="firstup"></h2>
     <img src="red.jpg" alt="White Circle" width="150" height="150">
@@ -205,6 +213,8 @@
     var black = 0;
     async function init() {
         document.getElementById("connect").style.visibility = 'hidden';
+        document.getElementById("connect").style.padding = "0px 0px 0px 0px";
+        document.getElementById("connect").style.fontSize = "0px";
         const port = await navigator.serial.requestPort();
         await port.open({ baudRate: 9600 });
         while (port.readable) {
