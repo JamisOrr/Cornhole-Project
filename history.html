@@ -12,17 +12,17 @@
     <h3 id="historyDisplayObject"></h3>
 </body>
 <script>
-    var data = localStorage.gh;
-    if (data != "") {
-        const data = data.split("~");
+    var rawData = localStorage.gh;
+    if (rawData != "") {
+        const data = rawData.split("~");
         var info = "";
         for (let i = 0; i < data.length; ++i) {
             var tempData = data[i];
             const tempDataArray = tempData.split("|");
-            info += tempDataArray[0]+"'s Score: " + tempDataArray[1] +" "+tempDataArray[2] +"'s Score: " + tempDataArray[3] + " Date Played: " + tempDataArray[4] + "\n";
+            info += "Game " + i + ": " + tempDataArray[0] + "'s Score: " + tempDataArray[1] + " " + tempDataArray[2] + "'s Score: " + tempDataArray[3] + " Date Played: " + tempDataArray[4] + "\n";
         }
         document.getElementById("historyDisplayObject").innerText = info;
-    }else{
+    } else {
         document.getElementById("historyDisplayObject").innerText = "No Recorded Game History";
     }
 </script>

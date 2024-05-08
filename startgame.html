@@ -42,11 +42,6 @@
 <body>
     <h1>Start Game</h1>
     <div>
-        <h3>Which Color is Throwing First?</h3>
-        <input type="button" id="white" value="White" onclick="white()" class="r">
-        <input type="button" id="black" value="Black" onclick="black()" class="b">
-    </div>
-    <div>
         <h3 class="rh">White Player Name:</h3>
         <input type="text" id="whitename" value="">
         <h3 class="bh">Black Player Name:</h3>
@@ -63,32 +58,21 @@
     <input type="button" id="start" value="Start Game" onclick="start()" class="start">
 </body>
 <script>
-    var first = "";
     var wname = "";
     var bname = "";
     var score = "";
     var custim = false;
     function start() {
-        wname=document.getElementById("whitename").value;
-        bname=document.getElementById("blackname").value;
-        var data=first+"|"+wname+"|"+bname+"|";
-        if(custim==false){
-            data+=score;
-        }else{
-            data+=document.getElementById("custom").value;
+        wname = document.getElementById("whitename").value;
+        bname = document.getElementById("blackname").value;
+        var data = wname + "|" + bname + "|";
+        if (custim == false) {
+            data += score;
+        } else {
+            data += document.getElementById("custom").value;
         }
-        localStorage.gameInfo=data;
+        localStorage.gameInfo = data;
         location.replace("./playinggame.html");
-    }
-    function white() {
-        first = "white";
-        document.getElementById("white").style.backgroundColor = "#00ff00";
-        document.getElementById("black").style.backgroundColor = "#000000";
-    }
-    function black() {
-        first = "black";
-        document.getElementById("white").style.backgroundColor = "#ffffff";
-        document.getElementById("black").style.backgroundColor = "#00ff00";
     }
     function eleven() {
         score = "11";

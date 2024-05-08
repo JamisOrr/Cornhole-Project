@@ -69,6 +69,7 @@
             padding-left: 50px;
             padding-right: 50px;
         }
+
         .kinect {
             background-color: red;
             font-size: 50px;
@@ -83,7 +84,6 @@
 <body>
     <input type="button" class="kinect" id="connect" value="CONNECT BOARD" onclick="init()">
     <h1>Live Score</h1>
-    <h2 class="him" id="firstup"></h2>
     <img src="red.jpg" alt="White Circle" width="150" height="150">
     <img src="blue.jpg" alt="Blue X" width="100" height="100" class="hee">
     <br>
@@ -109,17 +109,10 @@
 <script>
     var data = localStorage.gameInfo;
     const info = data.split("|");
-    document.getElementById("rn").innerText = info[1];
-    document.getElementById("bn").innerText = info[2];
-    var score = info[3];
+    document.getElementById("rn").innerText = info[0];
+    document.getElementById("bn").innerText = info[1];
+    var score = info[2];
     var round = 0;
-    if (info[0] == "white") {
-        document.getElementById("firstup").innerText = "White is First Up";
-        //  document.getElementById("firstup").style.color = "#ff0000";
-    } else {
-        document.getElementById("firstup").innerText = "Black is First Up";
-        //  document.getElementById("firstup").style.color = "#0000ff";
-    }
     const date = new Date().toDateString();
     var whiteOverall = 0;
     var blackOverall = 0;
@@ -135,7 +128,6 @@
     }
     function endRound() {
         inRound = false;
-        document.getElementById("firstup").innerText = "";
         if (white > black) {
             whiteOverall += white - black;
         } else if (black > white) {
@@ -147,26 +139,25 @@
         document.getElementById("blackOver").innerText = blackOverall;
         document.getElementById("rscore").innerText = white;
         document.getElementById("bscore").innerText = black;
+        checkscore();
     }
     function rp() {
         white++;
         document.getElementById("rscore").innerText = white;
-        checkscore();
     }
     function bp() {
         black++;
         document.getElementById("bscore").innerText = black;
-        checkscore();
     }
     function checkscore() {
-        if (white == score || black == score) {
-            var f = info[1] + "|" + white + "|" + info[2] + "|" + black + "|" + date;
+        if (whiteOverall >= score || blackOverall >= score) {
+            var f = info[0] + "|" + whiteOverall + "|" + info[1] + "|" + blackOverall + "|" + date;
             if (localStorage.gh == "") {
-                localStorage.gh = f;
+                localStorage.gh += f;
             } else {
-                localStorage.gh = "~" + f;
+                localStorage.gh += "~" + f;
             }
-            if (rscore == score) {
+            if (whiteOverall >= score) {
                 localStorage.go = "white";
             } else {
                 localStorage.go = "black";
@@ -222,8 +213,8 @@
             const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
             const reader = textDecoder.readable.getReader();
             while (true) {
-                    const { value, done } = await reader.read();
-                    if (inRound) {
+                const { value, done } = await reader.read();
+                if (inRound) {
                     if (value) {
                         const str = value;
                         for (const char of str) {
