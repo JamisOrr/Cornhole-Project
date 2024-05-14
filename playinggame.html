@@ -103,8 +103,7 @@
     <h2 class="b" id="bn"></h2>
     <h2 class="bottomPadding">Round: </h2>
     <h2 class="f" id="round">0</h2>
-    <input type="button" value="Start Round" onclick="startRound()">
-    <input type="button" value="End Round" onclick="endRound()">
+    <input type="button" value="Start Round" id="him" onclick="roundButton()">
 </body>
 <script>
     var data = localStorage.gameInfo;
@@ -117,6 +116,13 @@
     var whiteOverall = 0;
     var blackOverall = 0;
     var inRound = false;
+    function roundButton() {
+        if (inRound) {
+            endRound();
+        } else {
+            startRound();
+        }
+    }
     function startRound() {
         round++;
         document.getElementById("round").innerText = round;
@@ -125,6 +131,7 @@
         document.getElementById("rscore").innerText = white;
         document.getElementById("bscore").innerText = black;
         inRound = true;
+        document.getElementById("him").value = "End Round";
     }
     function endRound() {
         inRound = false;
@@ -140,6 +147,7 @@
         document.getElementById("rscore").innerText = white;
         document.getElementById("bscore").innerText = black;
         checkscore();
+        document.getElementById("him").value = "Start Round";
     }
     function rp() {
         white++;
