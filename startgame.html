@@ -52,12 +52,13 @@
         <input type="button" id="eleven" value="11" onclick="eleven()" class="init">
         <input type="button" id="twoone" value="21" onclick="twoone()" class="init">
         <input type="button" id="cust" value="Custom" onclick="custom()" class="init">
-        <input type="text" id="custom" value="Custom Score">
+        <input type="text" id="custom" value="">
     </div>
     <br>
     <input type="button" id="start" value="Start Game" onclick="start()" class="start">
 </body>
 <script>
+    document.getElementById("custom").style.visibility = 'hidden';
     var wname = "";
     var bname = "";
     var score = "";
@@ -65,18 +66,36 @@
     function start() {
         wname = document.getElementById("whitename").value;
         bname = document.getElementById("blackname").value;
+        var jamis = true;
         var data = wname + "|" + bname + "|";
         if (custim == false) {
             data += score;
         } else {
-            data += document.getElementById("custom").value;
+            if (isInt(document.getElementById("custom").value)) {
+                if (document.getElementById("custom").value > 0 && document.getElementById("custom").value < 100) {
+                    data += document.getElementById("custom").value;
+                } else {
+                    window.alert("Custom Game Score Must be and Integer from 1 to 99");
+                    jamis = false;
+                }
+            } else {
+                window.alert("Custom game score must be an Integer 1 to 99");
+                jamis = false;
+            }
+
         }
-        localStorage.gameInfo = data;
-        location.replace("./playinggame.html");
+        if (jamis) {
+            localStorage.gameInfo = data;
+            location.replace("./playinggame.html");
+        }
+    }
+    function isInt(value) {
+        return !isNaN(value) && (function (x) { return (x | 0) === x; })(parseFloat(value))
     }
     function eleven() {
         score = "11";
         custim = false;
+        document.getElementById("custom").style.visibility = 'hidden';
         document.getElementById("eleven").style.backgroundColor = "#000000";
         document.getElementById("eleven").style.color = "#d3d3d3";
         document.getElementById("twoone").style.backgroundColor = "#d3d3d3";
@@ -87,6 +106,7 @@
     function twoone() {
         score = "21";
         custim = false;
+        document.getElementById("custom").style.visibility = 'hidden';
         document.getElementById("eleven").style.backgroundColor = "#d3d3d3";
         document.getElementById("eleven").style.color = "#000000";
         document.getElementById("twoone").style.backgroundColor = "#000000";
@@ -96,6 +116,8 @@
     }
     function custom() {
         custim = true;
+        document.getElementById("custom").style.visibility = 'visible';
+        document.getElementById("custom").focus();
         document.getElementById("eleven").style.backgroundColor = "#d3d3d3";
         document.getElementById("eleven").style.color = "#000000";
         document.getElementById("twoone").style.backgroundColor = "#d3d3d3";

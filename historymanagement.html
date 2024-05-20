@@ -9,33 +9,46 @@
     <h1>History Management</h1>
 
     <input type="button" id="back" value="Back" onclick="window.location.href='history.html'">
-    <input type="button" id="reset" value="Clear History" onclick="reset()">
+    <input type="button" id="reset" value="Clear All History" onclick="reset()">
     <input type="text" id="d" value="">
-    <input type="button" value="press to delete entered game" onclick="del()">
+    <input type="button" id="raynislame" value="Press to Delete Entered Game" onclick="del()">
     <h3 id="historyDisplayObject"></h3>
 </body>
 <script>
     function del() {
-        var id = document.getElementById("d").value;
-        const data = localStorage.gh.split("~");
-        var temp = "";
-        var first = true;
-        for (var i = 0; i < data.length; i++) {
-            if (i != id) {
-                if (first) {
-                    first = false;
-                    temp += data[i];
-                } else {
-                    temp += "~" + data[i];
+        if (isInt(document.getElementById("d").value)) {
+            var id = document.getElementById("d").value;
+            const data = localStorage.gh.split("~");
+            var temp = "";
+            var first = true;
+            if (id <= data.length - 1) {
+                for (var i = 0; i < data.length; i++) {
+                    if (i != id) {
+                        if (first) {
+                            first = false;
+                            temp += data[i];
+                        } else {
+                            temp += "~" + data[i];
+                        }
+                    }
                 }
+                localStorage.gh = temp;
+                location.replace("./historymanagement.html");
+            } else {
+                document.getElementById("d").value = "";
+                window.alert("You must enter a value of a game that exists");
             }
+        } else {
+            document.getElementById("d").value = "";
+            window.alert("You must enter a value of a game that exists");
         }
-        localStorage.gh = temp;
-        location.replace("./historymanagement.html");
+    }
+    function isInt(value) {
+        return !isNaN(value) && (function (x) { return (x | 0) === x; })(parseFloat(value))
     }
     function reset() {
         localStorage.gh = "";
-        document.getElementById("historyDisplayObject").innerText = "No Recorded Game History";
+        location.replace("./historymanagement.html");
     }
     var rawData = localStorage.gh;
     if (rawData != "") {
@@ -63,6 +76,9 @@
         body.appendChild(tbl);
     } else {
         document.getElementById("historyDisplayObject").innerText = "No Recorded Game History";
+        document.getElementById("reset").style.visibility = 'hidden';
+        document.getElementById("d").style.visibility = 'hidden';
+        document.getElementById("raynislame").style.visibility = 'hidden';
     }
 </script>
 
