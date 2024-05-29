@@ -78,6 +78,17 @@
             padding-top: 50px;
             padding-bottom: 50px;
         }
+        .jamis {
+            float: left;
+            clear: left;
+        }
+        .ballsack {
+            float: left;
+            color: white;
+            background-color: black;
+            padding-left: 50px;
+            padding-right: 49px;
+        }
     </style>
 </head>
 
@@ -89,6 +100,10 @@
     <br>
     <input class="ra" type="button" id="rpt" value="+1" onclick="rp()">
     <input class="ba" type="button" id="bpt" value="+1" onclick="bp()">
+    <br>
+    <input class="ra" type="button" id="rnpt" value="-1 " onclick="rnp()">
+    <input class="ballsack" type="button" id="bnpt" value="-1 " onclick="bnp()">
+    <input type="button" value="Start Round" class="jamis" id="him" onclick="roundButton()">
     <h2 class="rh">Overall Score: </h2>
     <h2 id="whiteOver" class="rh">0</h2>
     <h2 class="bleck">-</h2>
@@ -103,7 +118,6 @@
     <h2 class="b" id="bn"></h2>
     <h2 class="bottomPadding">Round: </h2>
     <h2 class="f" id="round">0</h2>
-    <input type="button" value="Start Round" id="him" onclick="roundButton()">
 </body>
 <script>
     var data = localStorage.gameInfo;
@@ -155,6 +169,14 @@
     }
     function bp() {
         black++;
+        document.getElementById("bscore").innerText = black;
+    }
+    function rnp() {
+        white--;
+        document.getElementById("rscore").innerText = white;
+    }
+    function bnp() {
+        black--;
         document.getElementById("bscore").innerText = black;
     }
     function checkscore() {
